@@ -4,9 +4,11 @@ import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import { FiSettings, FiX } from "react-icons/fi";
-import Users from "../user/Users";
+import { useSelector, useDispatch } from "react-redux";
+import { updateSetting } from "../../redux-store/authStore";
 
 const useStyles = makeStyles((theme) => ({
+
   modal: {
     display: "flex",
     alignItems: "center",
@@ -21,12 +23,22 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function UserSetting() {
+  const dispatch=useDispatch()
   const classes = useStyles();
+  const {data, isLoading, editLoading}=useSelector(s=>s.auth)
+  const {setting}=data
   const [open, setOpen] = useState(false);
-  const [image, setImage] = useState({
-    url: "https://placeimg.com/192/192/people",
+  const [formData, setFormData] = useState({
+    focusInterval:Number(setting.focusInterval),
+    focusMode:Boolean(setting.focusMode),
+    scheduleUpload:Boolean(setting.scheduleUpload),
+    chatNotication:Boolean(setting.chatNotication),
+    commentNotication:Boolean(setting.commentNotication),
+    likeNotication:Boolean(setting.likeNotication),
+    shareNotication:Boolean(setting.shareNotication),
+    followNotication:Boolean(setting.followNotication),
   });
-  const [formData, setFormData] = useState({});
+
   const handleOpen = () => {
     setOpen(true);
   };
@@ -35,9 +47,11 @@ export default function UserSetting() {
     setOpen(false);
   };
 
-  const handleUpload = () => {
-    setOpen(false);
-  };
+  const handleSubmit = () =>{
+    dispatch(updateSetting(formData))
+    console.log(formData)
+  }
+ 
   return (
     <div>
       <button className="btn btn-ghost btn-sm" onClick={handleOpen}>
@@ -75,52 +89,80 @@ export default function UserSetting() {
                 <div className="form-control border rounded mb-1">
                   <label className="label cursor-pointer">
                     <span className="label-text text-base pl-2">Focus Mode</span>
-                    <input type="checkbox" class="toggle toggle-accent" />
+                    <input type="checkbox" className="toggle toggle-accent"
+                      checked={formData.focusMode}
+                      onChange={e=>setFormData({...formData,focusMode:!formData.focusMode})}
+                    />
                   </label>
                 </div>
+                {formData.focusMode && (
                 <div className="form-control border rounded mb-1">
                   <label className="label cursor-pointer">
                     <span className="label-text text-base pl-2">Focus Mode Interval</span>
-                    <input type="number" class="border px-1" placeholder="In minutes" />
+                    <input type="number" className="border px-1" placeholder="In minutes" 
+                      value={formData.focusInterval}
+                      onChange={e=>setFormData({...formData,focusInterval:Number(e.target.value)})}
+                    />
                   </label>
                 </div>
+                )}
+                
                 <div className="form-control border rounded mb-1">
                   <label className="label cursor-pointer">
                     <span className="label-text text-base pl-2">Schedule Upload</span>
-                    <input type="checkbox" class="toggle toggle-accent" />
+                    <input type="checkbox" className="toggle toggle-accent" 
+                      checked={formData.scheduleUpload}
+                onChange={e=>setFormData({...formData,scheduleUpload:!formData.scheduleUpload})}
+                />
                   </label>
                 </div>
                 <div className="form-control border rounded mb-1">
                   <label className="label cursor-pointer">
                     <span className="label-text text-base pl-2">Follow Notication</span>
-                    <input type="checkbox" class="toggle toggle-accent" />
+                    <input type="checkbox" className="toggle toggle-accent" 
+                      checked={formData.followNotication}
+                      onChange={e=>setFormData({...formData,followNotication:!formData.followNotication})}
+                      />
                   </label>
                 </div>
                 <div className="form-control border rounded mb-1">
                   <label className="label cursor-pointer">
                     <span className="label-text text-base pl-2">Comment Notication</span>
-                    <input type="checkbox" class="toggle toggle-accent" />
+                    <input type="checkbox" className="toggle toggle-accent" 
+                      checked={formData.commentNotication}
+                      onChange={e=>setFormData({...formData,commentNotication:!formData.commentNotication})}
+                      />
                   </label>
                 </div>
                 <div className="form-control border rounded mb-1">
                   <label className="label cursor-pointer">
                     <span className="label-text text-base pl-2">Share Notication</span>
-                    <input type="checkbox" class="toggle toggle-accent" />
+                    <input type="checkbox" className="toggle toggle-accent" 
+                      checked={formData.shareNotication}
+                      onChange={e=>setFormData({...formData,shareNotication:!formData.shareNotication})}
+                      />
                   </label>
                 </div>
                 <div className="form-control border rounded mb-1">
                   <label className="label cursor-pointer">
                     <span className="label-text text-base pl-2">Like Notication</span>
-                    <input type="checkbox" class="toggle toggle-accent" />
+                    <input type="checkbox" className="toggle toggle-accent" 
+                      checked={formData.likeNotication}
+                      onChange={e=>setFormData({...formData,likeNotication:!formData.likeNotication})}
+                      />
                   </label>
                 </div>
                 <div className="form-control border rounded mb-1">
                   <label className="label cursor-pointer">
                     <span className="label-text text-base pl-2">Chat Notication</span>
-                    <input type="checkbox" class="toggle toggle-accent" />
+                    <input type="checkbox" className="toggle toggle-accent" 
+                      checked={formData.chatNotication}
+                      onChange={e=>setFormData({...formData,chatNotication:!formData.chatNotication})}
+                      />
                   </label>
                 </div>
               </div>
+              <button class={`${editLoading?"loading":""} btn btn-block mt-3`} onClick={handleSubmit}>Save</button>
             </div>
           </div>
         </Fade>

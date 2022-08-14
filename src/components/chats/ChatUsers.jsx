@@ -14,7 +14,7 @@ export default function ChatUsers({userLists}) {
               placeholder="Search…"
               className="input input-bordered bg-slate-200 w-full"
             />
-            <button class="btn btn-square text-2xl">
+            <button className="btn btn-square text-2xl">
             <FiSearch />
           </button>
           </div>

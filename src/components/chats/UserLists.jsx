@@ -9,8 +9,8 @@ export default function UserLists({ userLists }) {
           return (
             <Link to={`/chat/${user.id}`} key={user.id} className="w-full flex justify-between items-center bg-white p-1 cursor-pointer mb-1 hover:bg-slate-100 rounded-md ">
               <div className="flex">
-                <div class="avatar online">
-                  <div class="w-10 my-auto rounded-full">
+                <div className="avatar online">
+                  <div className="w-10 my-auto rounded-full">
                     <img
                       src={
                         user?.image?.url

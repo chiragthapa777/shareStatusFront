@@ -208,7 +208,7 @@ const Notications=[
 export default function Notication() {
   return (
     <div className="dropdown dropdown-end">
-      <label tabindex="0">
+      <label tabIndex="0">
       <button className="btn btn-ghost btn-circle text-2xl ">
           <div
             className="indicator tooltip tooltip-bottom capitalize	"
@@ -220,7 +220,7 @@ export default function Notication() {
         </button>
       </label>
       <ul
-        tabindex="0"
+        tabIndex="0"
         className="dropdown-content menu p-2 shadow bg-base-100 rounded-lg min-w-[400px] text-slate-800 max-h-[600px] overflow-y-auto "
       >{Notications.length>0 && Notications.map(n=>{
         return(

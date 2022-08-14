@@ -5,6 +5,9 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import { FiSettings, FiX } from "react-icons/fi";
 import Users from "../user/Users";
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setUsers } from "../../redux-store/userStore";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -20,7 +23,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Follow({type}) {
+export default function Follow({type, data}) {
+  const dispatch =useDispatch()
+  const users=useSelector(s=>s.users)
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState({
@@ -28,9 +33,9 @@ export default function Follow({type}) {
   });
   const [formData, setFormData] = useState({});
   const handleOpen = () => {
+    dispatch(setUsers(data[type], type))
     setOpen(true);
   };
-
   const handleClose = () => {
     setOpen(false);
   };
@@ -38,10 +43,11 @@ export default function Follow({type}) {
   const handleUpload = () => {
     setOpen(false);
   };
+
   return (
     <div>
       <div className="indicator">
-        <span className="indicator-item badge badge-primary">99</span>
+        <span className="indicator-item badge badge-primary">{type==="following"?data?.following?.length:data?.follower?.length}</span>
         <button className="btn btn-ghost btn-sm" onClick={handleOpen}>{type}</button>
       </div>
       <Modal
@@ -72,7 +78,7 @@ export default function Follow({type}) {
                 {type}
               </h1>
             <div className="w-[400px] max-h-[500px] overflow-auto">
-                <Users />
+                <Users users={users} />
             </div>
             </div>
           </div>

@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import { FiSliders, FiX } from "react-icons/fi";
 import { matchSorter } from "match-sorter";
+import axios from "axios";
+import { url } from "../../api/url";
+import { toast } from "react-toastify";
+import Loader from "../loader/loadComp/Loader";
+import { useDispatch } from "react-redux";
+import { filterPost } from "../../redux-store/postStore";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -20,76 +26,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const data = [
-  {
-    id: 31,
-    createdAt: "2022-07-31T01:33:05.379Z",
-    updatedAt: "2022-07-31T01:33:05.379Z",
-    tag: "fun",
-  },
-  {
-    id: 32,
-    createdAt: "2022-07-31T01:33:05.384Z",
-    updatedAt: "2022-07-31T01:33:05.384Z",
-    tag: "play hard",
-  },
-  {
-    id: 33,
-    createdAt: "2022-07-31T01:33:05.389Z",
-    updatedAt: "2022-07-31T01:33:05.390Z",
-    tag: "live life full",
-  },
-  {
-    id: 34,
-    createdAt: "2022-07-31T01:33:05.394Z",
-    updatedAt: "2022-07-31T01:33:05.394Z",
-    tag: "explore",
-  },
-  {
-    id: 35,
-    createdAt: "2022-07-31T01:33:05.379Z",
-    updatedAt: "2022-07-31T01:33:05.379Z",
-    tag: "adventure",
-  },
-  {
-    id: 36,
-    createdAt: "2022-07-31T01:33:05.384Z",
-    updatedAt: "2022-07-31T01:33:05.384Z",
-    tag: "about books",
-  },
-  {
-    id: 37,
-    createdAt: "2022-07-31T01:33:05.389Z",
-    updatedAt: "2022-07-31T01:33:05.390Z",
-    tag: "strange",
-  },
-  {
-    id: 38,
-    createdAt: "2022-07-31T01:33:05.394Z",
-    updatedAt: "2022-07-31T01:33:05.394Z",
-    tag: "good times",
-  },
-  {
-    id: 39,
-    createdAt: "2022-07-31T01:33:05.394Z",
-    updatedAt: "2022-07-31T01:33:05.394Z",
-    tag: "school life",
-  },
-  {
-    id: 40,
-    createdAt: "2022-07-31T01:33:05.394Z",
-    updatedAt: "2022-07-31T01:33:05.394Z",
-    tag: "fresh air",
-  },
-  {
-    id: 41,
-    createdAt: "2022-07-31T01:33:05.394Z",
-    updatedAt: "2022-07-31T01:33:05.394Z",
-    tag: "get a life man",
-  },
-];
-
 export default function FilterModel() {
+  const dispatch=useDispatch()
+  //states
+  const [tags, setTags] = useState([]);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState({
@@ -97,16 +37,51 @@ export default function FilterModel() {
   });
   const [selectedTags, setSelectedTags] = useState([]);
   const [serachTag, setSearchTag] = useState("");
+  const [tagLoading, setTagLoading] = useState(false);
   const [formData, setFormData] = useState({
-    dateRange:false
+    tags:"",
+    sortBy:"date",
+    orderBy:"asc",
+    includeSharedPost:true,
+    dateRange: false,
+    from:"",
+    to:""
   });
+
+  // get All tags
+  useEffect(() => {
+    setTagLoading(true);
+    axios
+      .get(`${url}/tag`)
+      .then((res) => {
+        setTagLoading(false);
+        setTags(res.data.data);
+      })
+      .catch((err) => {
+        setTagLoading(false);
+        toast.error(
+          `${
+            err?.response?.data?.data
+              ? err?.response?.data?.data
+              : "Cannot load tags"
+          }`,
+          {
+            position: "top-right",
+            autoClose: 5000,
+          }
+        );
+      });
+  }, []);
+
+  // filtering tags
   let mappingData = [];
   if (serachTag === "") {
-    mappingData = data;
+    mappingData = tags;
   } else {
-    const sortedArr = matchSorter(data, serachTag, { keys: ["tag"] });
+    const sortedArr = matchSorter(tags, serachTag, { keys: ["tag"] });
     mappingData = sortedArr;
   }
+
   const tagSearchFunc = (e) => {
     setSearchTag(e.target.value);
   };
@@ -119,8 +94,25 @@ export default function FilterModel() {
     setOpen(false);
   };
 
+  const updateTags=(tag)=>{
+    if (
+      !selectedTags.find((a) => a.id === tag.id)
+    ) {
+      setSelectedTags([...selectedTags, tag]);
+      let tags = "";
+      for (const i in [...selectedTags, tag]) {
+        tags += [...selectedTags, tag][i].tag;
+        if (i < [...selectedTags, tag].length - 1) {
+          tags += ",";
+        }
+      }
+      setFormData({ ...formData, tags: tags });
+    }
+  }
   const handleUpload = () => {
-    setOpen(false);
+    dispatch(filterPost(formData))
+    console.log(formData)
+    // setOpen(false);
   };
   return (
     <div>
@@ -179,6 +171,14 @@ export default function FilterModel() {
                                 setSelectedTags(
                                   selectedTags.filter((a) => a.id !== tag.id)
                                 );
+                                let tags = "";
+                                for (const i in selectedTags.filter((a) => a.id !== tag.id)) {
+                                  tags += selectedTags.filter((a) => a.id !== tag.id)[i].tag;
+                                  if (i < selectedTags.filter((a) => a.id !== tag.id).length - 1) {
+                                    tags += ",";
+                                  }
+                                }
+                                setFormData({ ...formData, tags: tags });
                               }}
                             />
                             {tag.tag}
@@ -191,87 +191,130 @@ export default function FilterModel() {
                     placeholder="Search tag"
                     value={serachTag}
                     onChange={(e) => tagSearchFunc(e)}
-                    class="input w-full mb-2 border-slate-300"
+                    className="input w-full mb-2 border-slate-300"
                   />
-                  <ul className="menu w-full h-64 overflow-auto mb-2 bg-slate-200 rounded-md ">
-                    {mappingData.length > 0 &&
-                      mappingData.map((tag) => {
-                        return (
-                          <li>
-                            <div
-                              key={tag.id}
-                              className={
-                                selectedTags.find((a) => a.id === tag.id)
-                                  ? "bg-slate-300"
-                                  : ""
-                              }
-                              onClick={() => {
-                                if (
-                                  !selectedTags.find((a) => a.id === tag.id)
-                                ) {
-                                  setSelectedTags([...selectedTags, tag]);
-                                }
-                              }}
-                            >
-                              {tag.tag}
-                            </div>
-                          </li>
-                        );
-                      })}
+                    {tagLoading ? (
+                  <ul className="menu w-full h-64 overflow-auto mb-2 bg-slate-200 rounded-md flex justify-center items-center">
+                    <Loader />
                   </ul>
+                    ) : (
+                      <>
+                      <ul className="menu w-full h-64 overflow-auto mb-2 bg-slate-200 rounded-md ">
+                        {mappingData.length > 0 &&
+                          mappingData.map((tag) => {
+                            return (
+                              <li>
+                                <div
+                                  key={tag.id}
+                                  className={
+                                    selectedTags.find((a) => a.id === tag.id)
+                                      ? "bg-slate-300"
+                                      : ""
+                                  }
+                                  onClick={() => {
+                                    updateTags(tag)
+                                  
+                                  }}
+                                >
+                                  {tag.tag}
+                                </div>
+                              </li>
+                            );
+                          })}
+                      </ul>
+                      </>
+                    )}
                 </div>
                 {/* right */}
                 <div className="min-w-[330px]">
                   <div className="mb-2">
                     <h1 className="my-1">SORT BY</h1>
-                    <select class="select w-full border-slate-300 text-slate-500 font-normal ">
-                      <option>Date</option>
-                      <option>Like count</option>
-                      <option>Share count</option>
-                      <option>Comment count</option>
+                    <select 
+                    value={formData.sortBy}
+                    onChange={e=>setFormData({...formData,sortBy:e.target.value})}
+                    className="select w-full border-slate-300 text-slate-500 font-normal "
+                    >
+                      <option value={"date"}>Date</option>
+                      <option value={"like"}>Like count</option>
+                      <option value={"share"}>Share count</option>
+                      <option value={"comment"}>Comment count</option>
                     </select>
                   </div>
                   <div className="mb-2">
                     <h1 className="my-1">Order</h1>
-                    <select class="select w-full border-slate-300 text-slate-500 font-normal ">
-                      <option>Ascending </option>
-                      <option>Descending </option>
+                    <select 
+                    value={formData.orderBy}
+                    onChange={e=>setFormData({...formData,orderBy:e.target.value})}
+                    className="select w-full border-slate-300 text-slate-500 font-normal "
+                    >
+                      <option value={"asc"}>Ascending </option>
+                      <option value={"desc"}>Descending </option>
                     </select>
                   </div>
                   <div className="mb-2">
                     <div className="form-control">
                       <label className="label cursor-pointer">
-                        <span className="label-text text-base">Include shared post</span>
-                        <input type="checkbox" class="toggle toggle-accent" />
+                        <span className="label-text text-base">
+                          Include shared post
+                        </span>
+                        <input
+                          type="checkbox"
+                          className="toggle toggle-accent"
+                          checked={formData.includeSharedPost}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              includeSharedPost: !formData.includeSharedPost,
+                            });
+                          }}
+                        />
                       </label>
                     </div>
                   </div>
                   <div className="mb-2">
                     <div className="form-control">
                       <label className="label cursor-pointer">
-                        <span className="label-text text-base">Add date range</span>
-                        <input 
-                        type="checkbox" 
-                        class="toggle toggle-accent" 
-                        checked={formData.dateRange} 
-                        onChange={(e)=>{
-                          setFormData({...formData,dateRange:!formData.dateRange})
-                        }} />
+                        <span className="label-text text-base">
+                          Add date range
+                        </span>
+                        <input
+                          type="checkbox"
+                          className="toggle toggle-accent"
+                          checked={formData.dateRange}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              dateRange: !formData.dateRange,
+                            });
+                          }}
+                        />
                       </label>
                     </div>
                   </div>
                   {formData.dateRange && (
                     <div className="mb-2 w-full flex">
-                    <div className="flex-1 mr-2 ">
-                      <h1 className="my-1 ">FROM</h1>
-                      <input type="datetime-local" placeholder="Type here" class="input w-full border-slate-300" />
+                      <div className="flex-1 mr-2 ">
+                        <h1 className="my-1 ">FROM</h1>
+                        <input
+                          type="datetime-local"
+                          placeholder="Type here"
+                          className="input w-full border-slate-300"
+                          value={formData.from}
+                          onChange={e=>setFormData({...formData,from:e.target.value})}
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <h1 className="my-1">TO</h1>
+                        <input
+                          type="datetime-local"
+                          placeholder="Type here"
+                          className="input w-full border-slate-300"
+                          value={formData.to}
+                          onChange={e=>setFormData({...formData,to:e.target.value})}
+                        />
+                      </div>
                     </div>
-                    <div className="flex-1">
-                      <h1 className="my-1">TO</h1>
-                      <input type="datetime-local" placeholder="Type here" class="input w-full border-slate-300" />
-                    </div>
-                  </div>
-                  ) }
+                  )}
                 </div>
               </div>
               <button className="btn w-full" onClick={handleUpload}>

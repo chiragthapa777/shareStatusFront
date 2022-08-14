@@ -1,9 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import { FiPlusCircle, FiX } from "react-icons/fi";
+import { useDispatch, useSelector } from "react-redux";
+import { addPost } from "../../redux-store/postStore";
+import { url } from "../../api/url";
+import axios from "axios";
+import { toast } from "react-toastify";
+import Loader from "../loader/loadComp/Loader";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -20,19 +26,41 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function AddPost() {
+  const dispatch = useDispatch();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [image, setImage] = useState({
-    url: "https://placeimg.com/192/192/people",
-  });
+  const [imageLoading, setimageLoading] = useState(false);
   const [formData, setFormData] = useState({
-    schedule:false
+    schedule: false,
   });
+  let { posts, isLoading, message ,isSuccess } = useSelector((state) => state.post);
   const [post, setPost] = useState({
     status: "",
-    imageId: null,
     tags: "",
+    imageId: null,
   });
+  const [fakeimg, setfakeimg] = useState();
+
+  const onImageChange = async (e) => {
+    const data = new FormData();
+    data.append("file", e.target.files[0]);
+    setimageLoading(true)
+    axios
+      .post(`${url}/upload/postimage`, data)
+      .then((res) => {
+        setimageLoading(false)
+        setPost({ ...post, imageId: res.data.data.id });
+      })
+      .catch((err) => {
+        toast.error(`${err.response.data.data}`, {
+          position: "top-right",
+          autoClose: 5000,
+        });
+        setimageLoading(false)
+      });
+    const [file] = e.target.files;
+    setfakeimg(URL.createObjectURL(file));
+  };
 
   const handleOpen = () => {
     setOpen(true);
@@ -49,8 +77,24 @@ export default function AddPost() {
   };
 
   const handleUpload = () => {
-    setOpen(false);
+    if(!post.status){
+      toast.info(`Status cannot be empty`, {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }else{
+      dispatch(addPost(post));
+      setPost({status:"",tags:"",imageId:""})
+      setfakeimg(null)
+      setimageLoading(false)
+    }
   };
+
+  useEffect(()=>{
+    if(message==="Uploaded"){
+      setOpen(false)
+    }
+  },[message])
   return (
     <div>
       <button
@@ -92,14 +136,14 @@ export default function AddPost() {
                 {/* left */}
                 <div className="flex-1 min-w-[350px] mr-2">
                   <textarea
-                    class="textarea w-full h-28 bottom-1 bg-slate-100 mb-2 text-md resize-none"
+                    className="textarea w-full h-28 bottom-1 bg-slate-100 mb-2 text-md resize-none"
                     placeholder="Write your status"
                     value={post.status}
                     onChange={(e) => {
                       setPost({ ...post, status: e.target.value });
                     }}
                   ></textarea>
-                  <div class="form-control w-full mb-1">
+                  <div className="form-control w-full mb-1">
                     <input
                       type="text"
                       placeholder="Tags separated by comma"
@@ -108,65 +152,70 @@ export default function AddPost() {
                       onChange={(e) => {
                         setPost({ ...post, tags: e.target.value });
                       }}
-                      />
-                    <label class="label">
-                      <span class="label-text-alt text-slate-400">
+                    />
+                    <label className="label">
+                      <span className="label-text-alt text-slate-400">
                         Example : fun,travel world,explore
                       </span>
                     </label>
-                      </div>
-                    <div className="">
-                      <div className="form-control">
-                        <label className="label cursor-pointer">
-                          <span className="label-text text-base">
-                            Schdeule Post
-                          </span>
-                          <input
-                            type="checkbox"
-                            class="toggle toggle-accent"
-                            checked={formData.schedule}
-                            onChange={(e) => {
-                              setFormData({
-                                ...formData,
-                                schedule: !formData.schedule,
-                              });
-                            }}
-                          />
-                        </label>
+                  </div>
+                  <div className="">
+                    <div className="form-control">
+                      <label className="label cursor-pointer">
+                        <span className="label-text text-base">
+                          Schdeule Post
+                        </span>
+                        <input
+                          type="checkbox"
+                          className="toggle toggle-accent"
+                          checked={formData.schedule}
+                          onChange={(e) => {
+                            setFormData({
+                              ...formData,
+                              schedule: !formData.schedule,
+                            });
+                          }}
+                        />
+                      </label>
+                    </div>
+                  </div>
+                  {formData.schedule && (
+                    <div className="mb-2 w-full flex px-1">
+                      <div className="flex-1 mr-2 ">
+                        <h1 className="my-1 ">Date</h1>
+                        <input
+                          type="datetime-local"
+                          placeholder="Type here"
+                          className="input w-full border-slate-300"
+                        />
                       </div>
                     </div>
-                    {formData.schedule && (
-                      <div className="mb-2 w-full flex px-1">
-                        <div className="flex-1 mr-2 ">
-                          <h1 className="my-1 ">Date</h1>
-                          <input
-                            type="datetime-local"
-                            placeholder="Type here"
-                            class="input w-full border-slate-300"
-                          />
-                        </div>
-                      </div>
-                    )}
+                  )}
                   <input
                     type="file"
-                    placeholder="Type here"
-                    class="input w-full max-w-xs"
+                    placeholder="add Image"
+                    className="input w-full max-w-xs"
+                    accept=".png, .jpg, .jpeg"
+                    onChange={onImageChange}
                   />
                 </div>
                 {/* right */}
-                {image.url !== "" && (
+                {fakeimg && (
                   <div className="flex-1 min-w-[350px]">
+                    {imageLoading && <div className="bg-slate-200 opacity-30 absolute flex justify-center items-center w-[400px] h-[400px]">
+                      <Loader />
+                    </div>}
                     <img
                       className="w-[400px] h-[400px] object-cover mb-2 rounded-md"
-                      src={image.url}
+                      src={fakeimg}
                       alt=""
                     />
                   </div>
                 )}
               </div>
 
-              <button className="btn w-full" onClick={handleUpload}>
-                Upload
+              <button className={`btn w-full ${imageLoading || isLoading ? "loading":""}`} onClick={handleUpload}>
+                {message?message :"Upload"}
               </button>
             </div>
           </div>

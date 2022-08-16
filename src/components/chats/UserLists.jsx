@@ -1,10 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-export default function UserLists({ userLists }) {
+export default function UserLists({ userLists, loading }) {
+  if(loading){
+    return(
+      <>loading</>
+    )
+  }
   return (
     <div className="p-1 w-full">
-      {userLists.length > 0 &&
+      {userLists?.length > 0 &&
         userLists.map((user) => {
           return (
             <Link to={`/chat/${user.id}`} key={user.id} className="w-full flex justify-between items-center bg-white p-1 cursor-pointer mb-1 hover:bg-slate-100 rounded-md ">
@@ -14,8 +19,8 @@ export default function UserLists({ userLists }) {
                     <img
                       src={
                         user?.image?.url
-                          ? user.image
-                          : "https://placeimg.com/192/192/people"
+                          ? user.image.url
+                          : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                       }
                       alt=""
                     />
@@ -24,7 +29,7 @@ export default function UserLists({ userLists }) {
                 <div className="flex flex-col ml-2">
                   <p className="text-lg">{user.name}</p>
                   <p className="text-xs font-thin">
-                    {user?.sender?.length > 0 ? user.sender[0].chat : ""}
+                    {user?.sender?.length > 0 ? user.sender[0].chat.substring(0, 10)+" ..." : ""}
                   </p>
                 </div>
               </div>

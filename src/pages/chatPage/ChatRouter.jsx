@@ -5,6 +5,7 @@ import ChatPage from './ChatPage';
 export default function ChatRouter() {
   return (
     <Routes>
+        <Route path="/" element={<ChatPage />} />
         <Route path="/:id" element={<ChatPage />} />
     </Routes>
   )

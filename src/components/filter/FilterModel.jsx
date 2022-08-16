@@ -111,7 +111,6 @@ export default function FilterModel() {
   }
   const handleUpload = () => {
     dispatch(filterPost(formData))
-    console.log(formData)
     // setOpen(false);
   };
   return (

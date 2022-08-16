@@ -9,10 +9,8 @@ export default function Users({users}) {
   const {data}=useSelector(state=>state.auth)
   const handleFollow=(user)=>{
     if(data?.following.find(u=>u?.followingId===user?.id)){
-      console.log("unfollow")
       dispatch(followAuth("unfollow",user))
     }else{
-      console.log("follow")
       dispatch(followAuth("follow",user))
     }
   }

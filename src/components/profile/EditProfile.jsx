@@ -152,7 +152,6 @@ export default function EditProfile() {
                         <input
                           checked={Boolean(formData.active)}
                           onChange={(e) => {
-                            console.log(formData.active);
                             setFormData({
                               ...formData,
                               active: !formData.active,
@@ -193,7 +192,7 @@ export default function EditProfile() {
                 </div>
               </div>
               <button className={`btn w-full ${imageLoading || isLoading || editLoading ? "loading":""}`} onClick={handleUpload}>
-                {message?message :"Upload"}
+                Save
               </button>
             </div>
           </div>

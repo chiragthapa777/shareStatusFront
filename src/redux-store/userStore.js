@@ -78,16 +78,13 @@ export const getUsers = (options) => {
 };
 
 export const setUsers = (data, type) => {
-  console.log("======>", data);
   let idArr = "";
   for (const i in data) {
-    console.log(data[i][type].id.toString())
-    idArr += data[i][type].id.toString();
+    idArr += data[i][type==="following"?type:"user"]?.id.toString();
     if (i < data.length - 1) {
       idArr += ",";
     }
   }
-  console.log(idArr)
   return (dispatch) => {
     dispatcher(
       dispatch,

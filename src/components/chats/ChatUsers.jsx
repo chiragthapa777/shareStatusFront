@@ -2,10 +2,10 @@ import React from "react";
 import {FiSearch} from "react-icons/fi"
 import UserLists from "./UserLists";
 
-export default function ChatUsers({userLists}) {
+export default function ChatUsers({userLists, loading}) {
   return (
-    <div className="h-full w-[20vw] border-r-2 border-r-slate-500 overflow-x-auto">
-      <div className="bg-white p-2 border-b-2 border-b-slate-500 flex justify-center items-center flex-col">
+    <div className="h-full w-[20vw] border-r-2  overflow-x-auto">
+      <div className="bg-white p-2 border-b-2  flex justify-center items-center flex-col">
         <h1 className="font-mono p-1 text-2xl text-slate-600 font-bold">Chats</h1>
         <div className="form-control w-full mb-1">
           <div className="input-group w-full">
@@ -20,7 +20,7 @@ export default function ChatUsers({userLists}) {
           </div>
         </div>
       </div>
-      <UserLists userLists={userLists} />
+      <UserLists userLists={userLists} loading={loading} />
     </div>
   );
 }

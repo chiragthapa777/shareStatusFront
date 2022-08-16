@@ -140,10 +140,10 @@ export const loadAuth = () => {
           null,
           "AUTH"
         );
-        toast.error(`Cannot load user : ${error.response?.data.data}`, {
-          position: "top-right",
-          autoClose: 5000,
-        });
+        // toast.error(`Cannot load user : ${error.response?.data.data}`, {
+        //   position: "top-right",
+        //   autoClose: 5000,
+        // });
       });
   };
 };
@@ -183,13 +183,12 @@ export const loginAuth = ({ email, password }) => {
 };
 
 export const registerAuth = (name, email, password) => {
-  console.log({ name, email, password });
   return (dispatch) => {
     dispatcher(dispatch, true, "Please wait loggin in", null, null, "AUTH");
     axios
       .post(`${url}/auth/register`, { name, email, password })
       .then((res) => {
-        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("token", res.data.data.token);
         toast.info(`Login in as ${res.data.data.user.name}`, {
           position: "top-right",
           autoClose: 5000,

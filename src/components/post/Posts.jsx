@@ -15,7 +15,7 @@ export default function Posts({loading, posts}) {
         {posts.length>0 ?
         posts.map(post=><Postcard key={post.id} post={post}/>):
         <h1 className='mt-2'>
-          😢 Sorry can't any status for your feed
+          😢 Sorry can't find any status for your feed
         </h1>
         }
     </div>

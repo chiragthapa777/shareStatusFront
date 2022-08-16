@@ -13,10 +13,8 @@ export default function ProfileDetail({ data, loading }) {
   const location = useLocation();
   const handleFollow=(user)=>{
     if(auth?.data?.following.find(u=>u?.followingId===user?.id)){
-      console.log("unfollow")
       dispatch(followAuth("unfollow",user))
     }else{
-      console.log("follow")
       dispatch(followAuth("follow",user))
     }
   }

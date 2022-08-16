@@ -318,7 +318,6 @@ export const postShare = (data, maal) => {
 
 
 export const filterPost = (data) =>{
-  console.log(data)
   return (dispatch) => {
     dispatcher(
       dispatch,

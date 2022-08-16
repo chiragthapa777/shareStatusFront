@@ -8,6 +8,7 @@ import Users from "../user/Users";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setUsers } from "../../redux-store/userStore";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   modal: {
@@ -23,9 +24,9 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function Follow({type, data}) {
-  const dispatch =useDispatch()
-  const users=useSelector(s=>s.users)
+export default function Follow({ type, data }) {
+  const dispatch = useDispatch();
+  const users = useSelector((s) => s.users);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [image, setImage] = useState({
@@ -33,7 +34,7 @@ export default function Follow({type, data}) {
   });
   const [formData, setFormData] = useState({});
   const handleOpen = () => {
-    dispatch(setUsers(data[type], type))
+    // dispatch(setUsers(data[type], type))
     setOpen(true);
   };
   const handleClose = () => {
@@ -47,8 +48,14 @@ export default function Follow({type, data}) {
   return (
     <div>
       <div className="indicator">
-        <span className="indicator-item badge badge-primary">{type==="following"?data?.following?.length:data?.follower?.length}</span>
-        <button className="btn btn-ghost btn-sm" onClick={handleOpen}>{type}</button>
+        <span className="indicator-item badge badge-primary">
+          {type === "following"
+            ? data?.following?.length
+            : data?.follower?.length}
+        </span>
+        <button className="btn btn-ghost btn-sm" onClick={handleOpen}>
+          {type}
+        </button>
       </div>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -77,9 +84,48 @@ export default function Follow({type, data}) {
               <h1 className="text-slate-600 font-bold capitalize text-2xl mb-2">
                 {type}
               </h1>
-            <div className="w-[400px] max-h-[500px] overflow-auto">
-                <Users users={users} />
-            </div>
+              <div className="w-[400px] max-h-[500px] overflow-auto">
+                {data &&
+                  data[type]?.map((user) => {
+                    return (
+                      <div
+                        key={user[type==="following"?type:"user"].id}
+                        className="w-full flex justify-between items-center bg-slate-100 p-1 cursor-pointer mb-1 hover:bg-slate-200 rounded-md "
+                      >
+                        <Link to={`/profile/${user[type==="following"?type:"user"].id}`} className="flex">
+                          <div className="avatar">
+                            <div className="w-8 my-auto rounded-full">
+                              <img
+                                src={
+                                  user[type==="following"?type:"user"]?.image?.url
+                                    ? user[type==="following"?type:"user"].image
+                                    : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
+                                }
+                                alt=""
+                              />
+                            </div>
+                          </div>
+                          <div className="flex flex-col ml-2">
+                            <p className="text-sm">{user[type==="following"?type:"user"].name}</p>
+                            <p className="text-xs font-thin">{user[type==="following"?type:"user"].email}</p>
+                          </div>
+                        </Link>
+                        {/* <div>
+                          <button
+                            // onClick={() => handleFollow(user)}
+                            className="btn btn-ghost btn-xs text-green-500"
+                          >
+                            {data?.following?.find(
+                              (u) => u?.followingId === user[type==="following"?type:"user"]?.id
+                            )
+                              ? "unfollow"
+                              : "follow"}
+                          </button>
+                        </div> */}
+                      </div>
+                    );
+                  })}
+              </div>
             </div>
           </div>
         </Fade>

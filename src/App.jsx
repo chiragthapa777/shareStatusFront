@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect,useRef  } from "react";
 import {
   BrowserRouter,
   Routes,
@@ -18,13 +18,18 @@ import { ToastContainer } from "react-toastify";
 import { loadAuth } from "./redux-store/authStore";
 import { useDispatch, useSelector } from "react-redux";
 import AuthLoader from "./components/loader/AuthLoader";
-import PostLoader from "./components/loader/PostLoader";
+import { io } from "socket.io-client";
+import { Socket } from "./socket/socket";
 
 export default function App() {
   const dispatch = useDispatch();
-  const { isLoading } = useSelector(
+  const socket = useRef();
+  const { isLoading, data } = useSelector(
     (state) => state.auth
   );
+  useEffect(()=>{
+    Socket(socket, data?.id)
+  },[data])
   useEffect(() => {
     dispatch(loadAuth());
   },[]);

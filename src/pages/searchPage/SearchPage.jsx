@@ -8,7 +8,6 @@ import { getUsers } from "../../redux-store/userStore";
 
 export default function SearchPage() {
     const {users, post}=useSelector(s=>s)
-    console.log(users.users)
     const dispatch=useDispatch()
     const [toggle, settoggle] = useState("USER")
     const [search, setsearch] = useState("")

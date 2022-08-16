@@ -21,7 +21,6 @@ export default function VisitProfile() {
     axios
     .get(`${url}/user/${id}`)
     .then((res) => {
-      console.log(res.data.data)
       setuser(res.data.data)
       setloading(false)
     }).catch((err)=>{

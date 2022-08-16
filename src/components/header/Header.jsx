@@ -53,7 +53,7 @@ export default function Header() {
             <FiSearch />
           </div>
         </Link>
-        <Link to="/chat/1" className="btn btn-ghost btn-circle text-2xl ">
+        <Link to="/chat" className="btn btn-ghost btn-circle text-2xl ">
           <div
             className="indicator tooltip tooltip-bottom capitalize	"
             data-tip="Open Chat"

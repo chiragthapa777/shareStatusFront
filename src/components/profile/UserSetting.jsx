@@ -49,7 +49,6 @@ export default function UserSetting() {
 
   const handleSubmit = () =>{
     dispatch(updateSetting(formData))
-    console.log(formData)
   }
  
   return (

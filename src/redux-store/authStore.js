@@ -17,8 +17,9 @@ let initial = {
   editLoading: false,
   isError: false,
   isSuccess: true,
+  socketId:"",
   message: "",
-  token: getToken(),
+  isAuth:false,
   data: {
     id: "",
     name: "",
@@ -40,6 +41,7 @@ export const authUserReducer = (state = initial, action) => {
     case "LOAD_USER":
       return {
         ...initial,
+        isAuth:true,
         data: {
           ...action.user.data.data,
         },
@@ -48,6 +50,7 @@ export const authUserReducer = (state = initial, action) => {
       return {
         ...state,
         token: getToken(),
+        isAuth:true,
         data: {
           ...action.res.user,
         },
@@ -95,6 +98,9 @@ export const authUserReducer = (state = initial, action) => {
         },
       };
     }
+    case "SET_SOCKET_ID":
+      console.log(action.payload)
+      return { ...state, socketId: action.payload };
     case "SET_SUCCESS_AUTH":
       return { ...state, isSuccess: action.payload };
     case "SET_LOADING_AUTH":
@@ -318,3 +324,12 @@ export const updateSetting = (data) => {
       });
   };
 };
+
+export const setSocketId=(id)=>{
+  return(dispatch)=>{
+    dispatch({
+      type:"SET_SOCKET_ID",
+      payload:id
+    })
+  }
+}

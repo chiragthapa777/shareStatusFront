@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux/es/exports";
 import { followAuth } from "../../redux-store/authStore";
 
 export default function Users({users}) {
+  console.log(users)
   const dispatch=useDispatch()
   const {data}=useSelector(state=>state.auth)
   const handleFollow=(user)=>{
@@ -29,7 +30,7 @@ export default function Users({users}) {
                className="w-full flex justify-between items-center bg-white p-1 cursor-pointer mb-1 hover:bg-slate-100 rounded-md "
              >
                <Link  to={`/profile/${user.id}`} className="flex">
-                 <div className="avatar">
+                 <div className={`avatar ${users.onlineUsers.find(u=>u.userId===user.id)?"online":""}`}>
                    <div className="w-8 my-auto rounded-full">
                      <img
                        src={

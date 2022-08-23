@@ -14,22 +14,49 @@ import Error404 from "./pages/errorPage/Error404";
 import Unauthorized from "./pages/errorPage/Unauthorized";
 import SearchRouter from "./pages/searchPage/SearchRouter";
 import ChatRouter from "./pages/chatPage/ChatRouter";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { loadAuth } from "./redux-store/authStore";
 import { useDispatch, useSelector } from "react-redux";
 import AuthLoader from "./components/loader/AuthLoader";
 import { io } from "socket.io-client";
 import { Socket } from "./socket/socket";
+import { getNotifications } from "./redux-store/notificationStore";
+import { ioUrl } from "./api/url";
+import { getOnlineUser } from "./redux-store/userStore";
 
 export default function App() {
   const dispatch = useDispatch();
   const socket = useRef();
-  const { isLoading, data } = useSelector(
+  const { isLoading, data, token, isAuth } = useSelector(
     (state) => state.auth
   );
   useEffect(()=>{
-    Socket(socket, data?.id)
+    Socket(socket, data?.id,dispatch)
+    const socketOnlineuser=io(ioUrl)
+    socketOnlineuser.on("onlineUsers",(data)=>{
+      dispatch(getOnlineUser(data))
+    })
   },[data])
+  useEffect(()=>{
+    if(isAuth){
+      dispatch(getNotifications())
+      if(data?.setting.focusMode){
+        //localstorage play
+        setInterval(()=>{
+          toast.warning(`You have spend ${data?.setting?.focusInterval} minutes 😢`, {
+            position: "top-center",
+            autoClose: false,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            });
+          console.log("alert")
+        },Number(data?.setting?.focusInterval)*60*1000)
+      }
+    }
+  },[data.id, data.focusMode,data.focusInterval])
   useEffect(() => {
     dispatch(loadAuth());
   },[]);
@@ -47,18 +74,21 @@ export default function App() {
         {/* <PostLoader /> */}
         <Routes>
           {/* Protected routes */}
-          <Route path="/module/*" element={<Module />} />
-          <Route path="/home/*" element={<HomeRouter />} />
-          <Route path="/profile/*" element={<ProfileRouter />} />
-          <Route path="/search/*" element={<SearchRouter />} />
-          <Route path="/chat/*" element={<ChatRouter />} />
+          {isAuth && 
+            <Route >
+              <Route path="/module/*" element={<Module />} />
+              <Route path="/home/*" element={<HomeRouter />} />
+              <Route path="/profile/*" element={<ProfileRouter />} />
+              <Route path="/search/*" element={<SearchRouter />} />
+              <Route path="/chat/*" element={<ChatRouter />} /> 
+            </Route>
+          }
           {/* Protected routes */}
 
           <Route path="/auth/*" element={<AuthRouter />} />
           <Route path="/error" element={<Error404 />} />
           <Route path="/unauthorized" element={<Unauthorized />} />
-          <Route path="/" element={<Navigate to={"/home"} />} />
-          <Route path="/*" element={<Error404 />} />
+          <Route path="*" element={<Navigate to={!isAuth?"/auth":"/home"} />} />
         </Routes>
       </div>
     </BrowserRouter>

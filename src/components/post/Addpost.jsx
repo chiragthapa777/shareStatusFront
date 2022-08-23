@@ -38,6 +38,8 @@ export default function AddPost() {
     status: "",
     tags: "",
     imageId: null,
+    schedule: false,
+    date:""
   });
   const [fakeimg, setfakeimg] = useState();
 
@@ -77,6 +79,7 @@ export default function AddPost() {
   };
 
   const handleUpload = () => {
+    console.log(post)
     if(!post.status){
       toast.info(`Status cannot be empty`, {
         position: "top-right",
@@ -168,22 +171,26 @@ export default function AddPost() {
                         <input
                           type="checkbox"
                           className="toggle toggle-accent"
-                          checked={formData.schedule}
+                          checked={post.schedule}
                           onChange={(e) => {
-                            setFormData({
-                              ...formData,
-                              schedule: !formData.schedule,
+                            setPost({
+                              ...post,
+                              schedule: !post.schedule,
                             });
                           }}
                         />
                       </label>
                     </div>
                   </div>
-                  {formData.schedule && (
+                  {post.schedule && (
                     <div className="mb-2 w-full flex px-1">
                       <div className="flex-1 mr-2 ">
                         <h1 className="my-1 ">Date</h1>
                         <input
+                          value={post.date}
+                          onChange={(e)=>{
+                            setPost({...post,date:e.target.value})
+                          }}
                           type="datetime-local"
                           placeholder="Type here"
                           className="input w-full border-slate-300"

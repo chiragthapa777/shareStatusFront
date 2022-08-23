@@ -2,6 +2,8 @@ import { url } from "../api/url";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { dispatcher } from "../utils/dispatcher";
+import { ioUrl } from "../api/url";
+import { io } from "socket.io-client";
 
 let initial = {
   isLoading: false,
@@ -10,6 +12,7 @@ let initial = {
   isCmtLoading: false,
   message: "",
   users: [],
+  onlineUsers:[]
 };
 export const userReducer = (state = initial, action) => {
   switch (action.type) {
@@ -19,15 +22,21 @@ export const userReducer = (state = initial, action) => {
     case "SET_USERS": {
       return { ...state, users: action.payload };
     }
-    case "SET_SUCCESS_USER":
+    case "ADD_ONLINE_USER": {
+      /**
+       * {userId: 2, socketId: 'iD7VAyQdmPernJ0HAAAf'}
+       */
+      return { ...state, onlineUsers: action.payload};
+    }
+    case "SET_SUCCESS_NOTIFY":
       return { ...state, isSuccess: action.payload };
-    case "SET_LOADING_USER":
+    case "SET_LOADING_NOTIFY":
       return { ...state, isLoading: action.payload };
-    case "SET_ERROR_USER":
+    case "SET_ERROR_NOTIFY":
       return { ...state, isError: action.payload };
-    case "SET_MESSAGE_USER":
+    case "SET_MESSAGE_NOTIFY":
       return { ...state, message: action.payload };
-    case "SET_CMT_LOAD_USER":
+    case "SET_CMT_LOAD_NOTIFY":
       return { ...state, isCmtLoading: action.payload };
     default:
       return state;
@@ -126,3 +135,13 @@ export const setUsers = (data, type) => {
       });
   };
 };
+
+export const getOnlineUser=(obj)=>{
+  //make a api
+  return(dispatch)=>{
+    dispatch({
+      type: "ADD_ONLINE_USER",
+      payload: obj,
+    });
+  }
+}

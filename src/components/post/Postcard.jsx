@@ -19,6 +19,7 @@ export default function Postcard({ post }) {
   const location = useLocation();
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
+  const {onlineUsers} = useSelector((state) => state.users);
   const [showcmt, setshowcmt] = useState(false);
   const [comment, setComment] = useState("");
   const handleAddComment = () => {
@@ -58,7 +59,7 @@ export default function Postcard({ post }) {
     <div className="PostCard bg-white rounded-sm w-[520px] rounded-md mt-3 drop-shadow-md text-sm">
       {/* top start  */}
       <div className=" flex justify-between m-1">
-        <Link to={`/profile/${post.user.id}`} className="avatar">
+        <Link to={`/profile/${post.user.id}`} className={`avatar `}>
           <div className="w-10 rounded-full">
             <img
               src={

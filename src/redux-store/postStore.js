@@ -170,9 +170,9 @@ export const getPostsById = (id) => {
   };
 };
 
-export const addPost = ({ status, tags, imageId }) => {
+export const addPost = ({ status, tags, imageId, schedule, date }) => {
   return (dispatch) => {
-    let body = { status: status };
+    let body = { status: status, schedule,date };
     if (tags) {
       body.tags = tags;
     }
@@ -184,14 +184,21 @@ export const addPost = ({ status, tags, imageId }) => {
       .post(`${url}/post`, body)
       .then((res) => {
         dispatcher(dispatch, false, "Uploaded", null, false, "POST");
-        toast.success(`Post uploaded successfully`, {
-          position: "top-right",
-          autoClose: 5000,
-        });
-        dispatch({
-          type: "ADD_POST",
-          payload: res.data.data,
-        });
+        if(schedule){
+          toast.success(res.data.data, {
+            position: "top-right",
+            autoClose: 5000,
+          });
+        }else{
+          toast.success(`Post uploaded successfully`, {
+            position: "top-right",
+            autoClose: 5000,
+          });
+          dispatch({
+            type: "ADD_POST",
+            payload: res.data.data,
+          });
+        }
       })
       .catch((err) => {
         dispatcher(

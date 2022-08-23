@@ -1,9 +1,9 @@
 import React from "react";
-import { FiMail } from "react-icons/fi";
+import { FiMail, FiMessageSquare } from "react-icons/fi";
 import EditProfile from "./EditProfile";
 import Follow from "./Follow";
 import UserSetting from "./UserSetting";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import { followAuth } from "../../redux-store/authStore";
 
@@ -69,9 +69,15 @@ export default function ProfileDetail({ data, loading }) {
               <p className="">{data.bio}</p>
             </div>
             {location.pathname !== "/profile" && (
+              <div className="flex justify-center items-center">
               <div className="text-center mt-4">
                 <button onClick={()=>handleFollow(data)} className="btn btn-error btn-sm">{auth?.data?.following?.find(u => u?.followingId === data?.id)?"unfollow":"follow"}</button>
               </div>
+              <div className="text-center mt-4 ml-2">
+                <Link to={`/chat/${data.id}`} className="btn btn-success btn-sm"> <FiMessageSquare className="mr-2 text-lg text-green-200"/> <p className="my-auto">Message</p></Link>
+              </div>
+              </div>
+              
             )}
           </div>
         </div>

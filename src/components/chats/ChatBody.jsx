@@ -8,6 +8,7 @@ export default function ChatBody({ chats }) {
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: "auto" });
   };
+  console.log("asdgd",chats)
 
   useEffect(scrollToBottom, [chats]);
   return (
@@ -61,7 +62,7 @@ export default function ChatBody({ chats }) {
                       </div>
                       <div className="flex flex-col ml-2 p-1  bg-white rounded-md">
                         <div className="flex justify-between mb-1">
-                          <p className="text-sm font-semibold">{chat.receiver.name}</p>
+                          <p className="text-sm font-semibold">{chat.sender.name}</p>
                           <p className="text-xs font-extralight my-auto ml-3">
                             {" "}
                             {moment(chat.createdAt).fromNow()}

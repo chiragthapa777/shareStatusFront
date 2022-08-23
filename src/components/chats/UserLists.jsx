@@ -1,20 +1,25 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 export default function UserLists({ userLists, loading }) {
+  const {id}=useParams()
+  const {onlineUsers}=useSelector(s=>s.users)
   if(loading){
     return(
-      <>loading</>
+      <>loading...</>
     )
   }
   return (
     <div className="p-1 w-full">
       {userLists?.length > 0 &&
         userLists.map((user) => {
+          console.log(user)
           return (
-            <Link to={`/chat/${user.id}`} key={user.id} className="w-full flex justify-between items-center bg-white p-1 cursor-pointer mb-1 hover:bg-slate-100 rounded-md ">
+            <Link to={`/chat/${user.id}`} key={user.id} className={`w-full flex justify-between items-center ${id===user?.id ?"bg-slate-200":"bg-white"} p-1 cursor-pointer mb-1 hover:bg-slate-100 rounded-md `}>
               <div className="flex">
-                <div className="avatar online">
+                <div className={`avatar ${onlineUsers.find(u=>u.userId===user.id)?"online":""}`}>
                   <div className="w-10 my-auto rounded-full">
                     <img
                       src={

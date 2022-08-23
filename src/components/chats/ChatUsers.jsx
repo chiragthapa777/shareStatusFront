@@ -1,12 +1,13 @@
-import React from "react";
+import React, { useState } from "react";
 import {FiSearch} from "react-icons/fi"
 import UserLists from "./UserLists";
 
 export default function ChatUsers({userLists, loading}) {
+  const [sort, setSort] = useState("")
   return (
     <div className="h-full w-[20vw] border-r-2  overflow-x-auto">
-      <div className="bg-white p-2 border-b-2  flex justify-center items-center flex-col">
-        <h1 className="font-mono p-1 text-2xl text-slate-600 font-bold">Chats</h1>
+      <div className="bg-white p-2 border-b-2  flex justify-center items-center flex-col sticky top-[0vh] z-30">
+        {/* <h1 className="font-mono p-1 text-2xl text-slate-600 font-bold">Chats</h1> */}
         <div className="form-control w-full mb-1">
           <div className="input-group w-full">
             <input

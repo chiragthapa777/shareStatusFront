@@ -7,8 +7,10 @@ import { useSelector, useDispatch } from "react-redux";
 import { receiveChats, sendChats } from "../../redux-store/chatStore";
 import { ioUrl } from "../../api/url";
 import { io } from "socket.io-client";
+import {Link} from "react-router-dom"
 export default function ChatSpace({ chats, loading, friend, friendloading }) {
   const chat=useSelector(s=>s.chat)
+  const {onlineUsers}=useSelector(s=>s.users)
   const {data}=useSelector(s=>s.auth)
   const dispatch=useDispatch()
   const [message, setmessage] = useState("")
@@ -36,6 +38,12 @@ export default function ChatSpace({ chats, loading, friend, friendloading }) {
   }, [data.id,friend.id ])
   
 
+  console.log(location.pathname)
+  if (location.pathname !== "/chat") {
+    <div className="w-[80vw] h-[90vh] flex justify-center items-center">
+      <h1>Select a friend to start chatting</h1>
+    </div>;
+  }
 
   if (loading || friendloading) {
     return (
@@ -44,18 +52,13 @@ export default function ChatSpace({ chats, loading, friend, friendloading }) {
       </div>
     );
   }
-  if (location.pathname == "/chat") {
-    <div className="w-[80vw] h-[90vh] flex justify-center items-center">
-      <h1>Select a friend to start chatting</h1>
-    </div>;
-  }
   return (
     <div className="w-[80vw] h-[90vh]">
       <div className="sticky top-[10vh] bg-white border-b-2  w-full">
         {/* header */}
         <div className="flex p-2">
-          <div className="avatar">
-            <div className="w-12 rounded-full">
+          <Link to={`/profile/${friend.id}`} className="avatar">
+            <div  className="w-12 rounded-full">
               <img src={
                         friend?.image?.url
                           ? friend.image.url
@@ -63,10 +66,10 @@ export default function ChatSpace({ chats, loading, friend, friendloading }) {
                       }
                       alt="" />
             </div>
-          </div>
+          </Link>
           <div className="flex flex-col ml-2">
             <p className="text-lg">{friend.name}</p>
-            <p className="text-xs font-thin">Active</p>
+            <p className="text-xs font-thin">{onlineUsers.find(u=>u.userId===friend.id)?"active":"inactive"}</p>
           </div>
         </div>
       </div>

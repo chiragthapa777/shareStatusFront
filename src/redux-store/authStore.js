@@ -1,7 +1,8 @@
-import { url } from "../api/url";
+import { ioUrl, url } from "../api/url";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { dispatcher } from "../utils/dispatcher";
+import { io } from "socket.io-client";
 
 // Reducers
 const getToken = () => {
@@ -57,6 +58,8 @@ export const authUserReducer = (state = initial, action) => {
       };
     }
     case "LOGOUT_USER": {
+      const socket=io(ioUrl)
+      socket.emit("leave-room",state.socketId+"_room")
       return {
         ...initial,
       };
@@ -223,6 +226,7 @@ export const registerAuth = (name, email, password) => {
 };
 
 export const logoutAuth = (name) => {
+      
   return (dispatch) => {
     toast.info(`Logging out ${name}`, {
       position: "top-right",
@@ -326,6 +330,7 @@ export const updateSetting = (data) => {
 };
 
 export const setSocketId=(id)=>{
+  console.log("socket id chnaged : ",id)
   return(dispatch)=>{
     dispatch({
       type:"SET_SOCKET_ID",

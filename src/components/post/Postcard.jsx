@@ -1,15 +1,11 @@
 import React, { useState } from "react";
 import moment from "moment";
 import {
-  FiThumbsUp,
-  FiThumbsDown,
-  FiMessageCircle,
-  FiShare2,
   FiMoreVertical,
-  FiLogOut,
   FiEdit,
   FiDelete,
 } from "react-icons/fi";
+import { FaThumbsUp, FaShareAlt, FaComment } from "react-icons/fa"
 import { IoSendSharp } from "react-icons/io5";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -137,11 +133,11 @@ export default function Postcard({ post }) {
         } pb-1`}
       >
         <div className="my-auto text-center flex justify-center items-center flex-col cursor-pointer hover:text-blue-600">
-          <FiThumbsUp
+          <FaThumbsUp
             className={`text-lg text-slate-600  ${
               post.likes.find((c) => c.user.id === auth.data.id)
                 ? "text-primary"
-                : "text-slate-600"
+                : "text-slate-400"
             }`}
             onClick={handleLike}
           />
@@ -153,21 +149,21 @@ export default function Postcard({ post }) {
             setshowcmt(!showcmt);
           }}
         >
-          <FiMessageCircle
+          <FaComment
             className={`text-lg text-slate-600  ${
               post.comments.find((c) => c.user.id === auth.data.id)
                 ? "text-primary"
-                : "text-slate-600"
+                : "text-slate-400"
             }`}
           />
           <p className="text-xs">{`${post.comments.length} Comments`}</p>
         </div>
         <div className="my-auto text-center flex justify-center items-center flex-col cursor-pointer hover:text-blue-600">
-          <FiShare2
+          <FaShareAlt
             className={`text-lg text-slate-600 ${
               post.shares.find((c) => c.user.id === auth.data.id)
                 ? "text-primary"
-                : "text-slate-600"
+                : "text-slate-400"
             }`}
             onClick={handleShare}
           />

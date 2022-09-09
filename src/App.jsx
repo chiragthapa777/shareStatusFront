@@ -30,14 +30,24 @@ export default function App() {
   const { isLoading, data, token, isAuth } = useSelector(
     (state) => state.auth
   );
+  if(isAuth===false || data.focusMode===false){
+    var interval_id = window.setInterval(()=>{}, 99999);
+    for (var i = 0; i < interval_id; i++){
+      window.clearInterval(i);
+    }
+  }
   useEffect(()=>{
     Socket(socket, data?.id,dispatch)
     const socketOnlineuser=io(ioUrl)
     socketOnlineuser.on("onlineUsers",(data)=>{
       dispatch(getOnlineUser(data))
     })
-  },[data])
+  },[data, token])
   useEffect(()=>{
+    let interval_id = window.setInterval(()=>{}, 99999);
+    for (let i = 0; i < interval_id; i++){
+      window.clearInterval(i);
+    }
     if(isAuth){
       dispatch(getNotifications())
       if(data?.setting.focusMode){

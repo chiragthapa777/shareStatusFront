@@ -11,7 +11,7 @@ import { useDispatch } from "react-redux";
 export default function Notication() {
   const dispatch=useDispatch()
   const[notify,setNotify]= useState(false)
-  const {socketId}=useSelector(s=>s.auth)
+  const {socketId, data, token}=useSelector(s=>s.auth)
   useEffect(()=>{
     if(socketId){
       const socket=io(ioUrl)
@@ -21,7 +21,7 @@ export default function Notication() {
         dispatch((setNotifications(message)))
       })
     }
-  },[socketId])
+  },[socketId, data, token])
   const {isLoading, notifications}=useSelector(s=>s.notify)
 
   const handleClick=()=>{

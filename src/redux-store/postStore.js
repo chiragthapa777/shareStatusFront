@@ -2,7 +2,7 @@ import { url } from "../api/url";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { dispatcher } from "../utils/dispatcher";
-
+import {moment} from "moment"
 let initial = {
   isLoading: false,
   isError: false,
@@ -213,7 +213,7 @@ export const addPost = ({ status, tags, imageId, schedule, date }) => {
           `${
             err?.response?.data?.data
               ? err?.response?.data?.data
-              : "Cannot uplpoad post"
+              : "Cannot upload post"
           }`,
           {
             position: "top-right",

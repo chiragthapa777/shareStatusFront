@@ -41,7 +41,8 @@ export default function ChatPage() {
   }, [id])
   useEffect(()=>{
     dispatch(getUserLists())
-  },[])
+    console.log("change get users")
+  },[chat.chats])
   
   return (
     <div className="flex w-[100vw] h-[90vh]">

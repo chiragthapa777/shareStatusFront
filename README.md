@@ -1,6 +1,6 @@
-### shareStatus
+# shareStatus
 share status is a social media application. Technology used in this project are Express backend api server, Socket.io , ReactJS, Redux, PostgresSQL, Prisma, JWT, Cloudinary etc.
-# feature
+### feature
 1. User Account  :  login and register, extensive account settings, follow and unfollow.
 2. Post : CRUD, search, extensive filter, like , share and comment.
 3. Schedule post upload.

@@ -66,7 +66,7 @@ export const authUserReducer = (state = initial, action) => {
     }
     case "EDIT_USER":
       return {
-        ...initial,
+        ...state,
         data: {
           ...action.user.data.data,
         },
@@ -102,7 +102,6 @@ export const authUserReducer = (state = initial, action) => {
       };
     }
     case "SET_SOCKET_ID":
-      console.log(action.payload)
       return { ...state, socketId: action.payload };
     case "SET_SUCCESS_AUTH":
       return { ...state, isSuccess: action.payload };
@@ -330,7 +329,6 @@ export const updateSetting = (data) => {
 };
 
 export const setSocketId=(id)=>{
-  console.log("socket id chnaged : ",id)
   return(dispatch)=>{
     dispatch({
       type:"SET_SOCKET_ID",

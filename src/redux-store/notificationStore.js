@@ -86,7 +86,6 @@ export const getNotifications = (id) => {
 };
 
 export const setNotifications = (message) => {
-  console.log("set noticifation",message)
   return (dispatch) => {
     toast.info(`${message?.notication}`, {
       position: "top-right",

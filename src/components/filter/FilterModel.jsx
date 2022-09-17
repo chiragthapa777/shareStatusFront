@@ -43,7 +43,7 @@ export default function FilterModel() {
     sortBy:"date",
     orderBy:"asc",
     includeSharedPost:true,
-    dateRange: false,
+    dateRange: "false",
     from:"",
     to:""
   });
@@ -279,18 +279,18 @@ export default function FilterModel() {
                         <input
                           type="checkbox"
                           className="toggle toggle-accent"
-                          checked={formData.dateRange}
+                          checked={formData.dateRange==="false"?false:true}
                           onChange={(e) => {
                             setFormData({
                               ...formData,
-                              dateRange: !formData.dateRange,
+                              dateRange: formData.dateRange==="true"?"false":"true",
                             });
                           }}
                         />
                       </label>
                     </div>
                   </div>
-                  {formData.dateRange && (
+                  {formData.dateRange === "true" && (
                     <div className="mb-2 w-full flex">
                       <div className="flex-1 mr-2 ">
                         <h1 className="my-1 ">FROM</h1>

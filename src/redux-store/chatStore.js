@@ -33,10 +33,8 @@ export const chatReducer = (state = initial, action) => {
       return { ...state, userLists: action.payload };
     }
     case "RECEIVE_CHAT": {
-      console.log("mildaixaa",action.payload)
       let chats=state.chats
       if(!chats.find(i=>i.id===action.payload.id)){
-        console.log("vetyooo", action.payload)
         chats=[...state.chats,action.payload]
       }
       return { ...state, chats:chats };
@@ -103,14 +101,18 @@ export const getChats = (id) => {
   };
 };
 
-export const getUserLists = () => {
+export const getUserLists = (search) => {
+  let URL =`${url}/chat/userlists`
+  if(search){
+    URL=`${url}/chat/userlists?search=${search}`
+  }
   return (dispatch) => {
     dispatch({
         type: "SET_UL_LOADING_CHAT",
         payload: true,
       });
     axios
-      .get(`${url}/chat/userlists`)
+      .get(URL)
       .then((res) => {
         dispatch({
             type: "SET_UL_LOADING_CHAT",
@@ -146,7 +148,6 @@ export const sendChats = (message,receiverId, userId) => {
   let userArr=[receiverId,userId]
   userArr.sort((a,b)=>a-b)
   const room=userArr.join("and")
-  console.log(room)
   return (dispatch) => {
     dispatch({
         type: "SET_SEND_LOADING_CHAT",

@@ -13,6 +13,7 @@ export default function ChatPage() {
   const dispatch= useDispatch()
   const [friend, setfriend] = useState({})
   const [friendloading, setfriendloading] = useState(false)
+  const [search, setsearch] = useState("")
   useEffect(() => {
     if(id){
       dispatch(getChats(id))
@@ -39,15 +40,17 @@ export default function ChatPage() {
     }
 
   }, [id])
+  const handleSearch = () =>{
+    dispatch(getUserLists(search))
+  }
   useEffect(()=>{
-    dispatch(getUserLists())
-    console.log("change get users")
+    dispatch(getUserLists(""))
   },[chat.chats])
   
   return (
     <div className="flex w-[100vw] h-[90vh]">
-      <ChatUsers userLists={chat.userLists} loading={chat.isUserListLoading}/>
-      <ChatSpace chats={id?chat.chats:[]} loading={chat.isLoading}  friend={friend} friendloading={friendloading} />
+      <ChatUsers userLists={chat.userLists} loading={chat.isUserListLoading} setsearch={setsearch} search={search} handleSearch={handleSearch} id={id}/>
+      <ChatSpace chats={id?chat.chats:[]} loading={chat.isLoading}  friend={friend} friendloading={friendloading} isWelcome={!id?true:false} />
     </div>
   );
 }

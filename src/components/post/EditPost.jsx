@@ -3,9 +3,9 @@ import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
-import { FiPlusCircle, FiX } from "react-icons/fi";
+import { FiEdit, FiX } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
-import { addPost } from "../../redux-store/postStore";
+import { addPost, editPost, setEditContent } from "../../redux-store/postStore";
 import { url } from "../../api/url";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -25,32 +25,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AddPost() {
+export default function EditPost(props) {
+  const { postContent } = props;
   const dispatch = useDispatch();
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [imageLoading, setimageLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    schedule: false,
-  });
-  let { posts, isLoading, message ,isSuccess } = useSelector((state) => state.post);
+  let { posts, isLoading, message, isSuccess, editPostContent } = useSelector(
+    (state) => state.post
+  );
   const [post, setPost] = useState({
-    status: "",
-    tags: "",
-    imageId: null,
-    schedule: false,
-    date:""
+    status: postContent?.status ? postContent.status : "",
+    tags:
+      postContent?.tags
+        ?.map((t) => (t?.tag?.tag ? t.tag.tag : ""))
+        .toString() || "",
+    imageId: postContent?.imageId ? postContent.imageId : null,
   });
-  const [fakeimg, setfakeimg] = useState();
+  const [fakeimg, setfakeimg] = useState(postContent?.image?.url ? postContent.image.url : null);
 
   const onImageChange = async (e) => {
     const data = new FormData();
     data.append("file", e.target.files[0]);
-    setimageLoading(true)
+    setimageLoading(true);
     axios
       .post(`${url}/upload/postimage`, data)
       .then((res) => {
-        setimageLoading(false)
+        setimageLoading(false);
         setPost({ ...post, imageId: res.data.data.id });
       })
       .catch((err) => {
@@ -58,7 +59,7 @@ export default function AddPost() {
           position: "top-right",
           autoClose: 5000,
         });
-        setimageLoading(false)
+        setimageLoading(false);
       });
     const [file] = e.target.files;
     setfakeimg(URL.createObjectURL(file));
@@ -79,34 +80,43 @@ export default function AddPost() {
   };
 
   const handleUpload = () => {
-    if(!post.status){
+    if (!post.status) {
       toast.info(`Status cannot be empty`, {
         position: "top-right",
         autoClose: 3000,
       });
-    }else{
-      dispatch(addPost(post));
-      setPost({status:"",tags:"",imageId:""})
-      setfakeimg(null)
-      setimageLoading(false)
+    } else {
+      dispatch(editPost(post,postContent.id));
+      setPost({ status: "", tags: "", imageId: "" });
+      setfakeimg(null);
+      setimageLoading(false);
     }
   };
 
-  useEffect(()=>{
-    if(message==="Uploaded"){
-      setOpen(false)
+  const handleLoadEditContent = () => {
+    handleOpen();
+    dispatch(setEditContent(postContent));
+  };
+  
+  const handleRemoveImage = () => {
+    setPost({...post,imageId:"remove"})
+    setfakeimg(null);
+  }
+
+  useEffect(() => {
+    if (message === "Uploaded") {
+      setOpen(false);
     }
-  },[message])
+  }, [message]);
   return (
     <div>
-      <button
-        className="btn btn-ghost btn-circle text-[1.65rem]"
-        onClick={handleOpen}
+      <div
+        className="flex justify-centre items-center text-green-600"
+        onClick={handleLoadEditContent}
       >
-        <div className="tooltip tooltip-bottom capitalize	" data-tip="add post">
-          <FiPlusCircle />
-        </div>
-      </button>
+        <FiEdit className="text-lg mr-3" />
+        Edit
+      </div>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -132,7 +142,7 @@ export default function AddPost() {
             {/* form content */}
             <div className=" max-h-[100vh] pt-2">
               <h1 className="text-slate-600 font-bold	text-2xl mb-2">
-                Add Post
+                Edit Post
               </h1>
               <div className="w-full flex ">
                 {/* left */}
@@ -161,42 +171,7 @@ export default function AddPost() {
                       </span>
                     </label>
                   </div>
-                  <div className="">
-                    <div className="form-control">
-                      <label className="label cursor-pointer">
-                        <span className="label-text text-base">
-                          Schdeule Post
-                        </span>
-                        <input
-                          type="checkbox"
-                          className="toggle toggle-accent"
-                          checked={post.schedule}
-                          onChange={(e) => {
-                            setPost({
-                              ...post,
-                              schedule: !post.schedule,
-                            });
-                          }}
-                        />
-                      </label>
-                    </div>
-                  </div>
-                  {post.schedule && (
-                    <div className="mb-2 w-full flex px-1">
-                      <div className="flex-1 mr-2 ">
-                        <h1 className="my-1 ">Date</h1>
-                        <input
-                          value={post.date}
-                          onChange={(e)=>{
-                            setPost({...post,date:e.target.value})
-                          }}
-                          type="datetime-local"
-                          placeholder="Type here"
-                          className="input w-full border-slate-300"
-                        />
-                      </div>
-                    </div>
-                  )}
+                  <button className="btn btn-xs bg-red-500 mb-2 ml-1" onClick={handleRemoveImage}>Remove Image</button>
                   <input
                     type="file"
                     placeholder="add Image"
@@ -208,9 +183,11 @@ export default function AddPost() {
                 {/* right */}
                 {fakeimg && (
                   <div className="flex-1 min-w-[350px]">
-                    {imageLoading && <div className="bg-slate-200 opacity-30 absolute flex justify-center items-center w-[400px] h-[400px]">
-                      <Loader />
-                    </div>}
+                    {imageLoading && (
+                      <div className="bg-slate-200 opacity-30 absolute flex justify-center items-center w-[400px] h-[400px]">
+                        <Loader />
+                      </div>
+                    )}
                     <img
                       className="w-[400px] h-[400px] object-cover mb-2 rounded-md"
                       src={fakeimg}
@@ -220,8 +197,13 @@ export default function AddPost() {
                 )}
               </div>
 
-              <button className={`btn w-full ${imageLoading || isLoading ? "loading":""}`} onClick={handleUpload}>
-                {message?message :"Upload"}
+              <button
+                className={`btn w-full ${
+                  imageLoading || isLoading ? "loading" : ""
+                }`}
+                onClick={handleUpload}
+              >
+                {message ? message : "Update"}
               </button>
             </div>
           </div>

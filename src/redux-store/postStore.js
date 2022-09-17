@@ -10,6 +10,7 @@ let initial = {
   isCmtLoading: false,
   message: "",
   posts: [],
+  editPostContent:{}
 };
 export const postReducer = (state = initial, action) => {
   switch (action.type) {
@@ -90,6 +91,33 @@ export const postReducer = (state = initial, action) => {
           }
         }),
       };
+    }
+    case "EDIT_POST_CONTENT":{
+      return {
+        ...state,
+        editPostContent:{
+          ...action.payload
+        }
+      }
+    }
+    case "EDIT_POST":{
+      return{
+        ...state,
+        posts:state.posts.map(p=>{
+          if(p.id===action.payload.id){
+            return action.payload
+          }
+          else{
+            return p
+          }
+        })
+      }
+    }
+    case "DELETE_POST":{
+      return{
+        ...state,
+        posts:state.posts.filter(p=>p.id!==action.payload.id)
+      }
     }
     case "SET_SUCCESS_POST":
       return { ...state, isSuccess: action.payload };
@@ -342,7 +370,7 @@ export const filterPost = (data) =>{
           data?.to ? "=" + data.to : ""
         }&includeSharedPost${
           data?.includeSharedPost ? "=" + data.includeSharedPost : ""
-        }=&tags${data?.tags ? "=" + data.tags : ""}`
+        }=&tags${data?.tags ? "=" + data.tags : ""}&dateRange=${data.dateRange}`
       )
       .then((post) => {
         dispatcher(dispatch, false, "", null, null, "POST");
@@ -398,3 +426,118 @@ export const searchPost = (search) =>{
       });
   };
 }
+
+/**
+ * edit post
+ * params
+ * (
+ *    {
+ *      status:"",
+ *      tags:"",
+ *      imageId:""
+ *    },
+ *    id:1
+ * )
+ * 
+ */
+export const editPost = (data,id) => {
+  return (dispatch) => {
+    dispatcher(dispatch, true, "Updating Status", null, null, "POST");
+    axios
+      .put(`${url}/post/${id}`, { ...data })
+      .then((res) => {
+        dispatcher(dispatch, false, "updated", null, false, "POST");
+        dispatch({
+          type: "EDIT_POST",
+          payload: res.data.data,
+        });
+        toast.success(
+          `${
+            "Status updated successfully"
+          }`,
+          {
+            position: "top-right",
+            autoClose: 5000,
+          }
+        );
+      })
+      .catch((err) => {
+        toast.error(
+          `${
+            err?.response?.data?.data
+              ? err?.response?.data?.data
+              : "Cannot edit on post"
+          }`,
+          {
+            position: "top-right",
+            autoClose: 5000,
+          }
+        );
+        dispatcher(
+          dispatch,
+          false,
+          "Cannot update status, Retry",
+          true,
+          null,
+          "POST"
+        );
+      });
+  };
+};
+
+
+export const setEditContent=(data)=>{
+  return async (dispatch)=>{
+    dispatch({
+      type: "EDIT_POST_CONTENT",
+      payload: data,
+    });
+  }
+}
+
+
+// delete
+export const deletePost = (id) => {
+  return (dispatch) => {
+    dispatcher(dispatch, true, "Updating Status", null, null, "POST");
+    axios
+      .delete(`${url}/post/${id}`)
+      .then((res) => {
+        dispatcher(dispatch, false, "updated", null, false, "POST");
+        dispatch({
+          type: "DELETE_POST",
+          payload: res.data.data,
+        });
+        toast.success(
+          `${
+            "Status deleted successfully"
+          }`,
+          {
+            position: "top-right",
+            autoClose: 5000,
+          }
+        );
+      })
+      .catch((err) => {
+        toast.error(
+          `${
+            err?.response?.data?.data
+              ? err?.response?.data?.data
+              : "Cannot delete on post"
+          }`,
+          {
+            position: "top-right",
+            autoClose: 5000,
+          }
+        );
+        dispatcher(
+          dispatch,
+          false,
+          "Cannot delete status, Retry",
+          true,
+          null,
+          "POST"
+        );
+      });
+  };
+};

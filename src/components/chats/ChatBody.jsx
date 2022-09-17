@@ -8,7 +8,6 @@ export default function ChatBody({ chats }) {
   const scrollToBottom = () => {
     messagesEndRef.current.scrollIntoView({ behavior: "auto" });
   };
-  console.log("asdgd",chats)
 
   useEffect(scrollToBottom, [chats]);
   return (

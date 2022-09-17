@@ -1,8 +1,12 @@
 import React from 'react'
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import ChatPage from './ChatPage';
 
-export default function ChatRouter() {
+export default function ChatRouter({isAuth}) {
+  const naviagte= useNavigate()
+  if(!isAuth){
+    naviagte("/auth")
+  }
   return (
     <Routes>
         <Route path="/" element={<ChatPage />} />

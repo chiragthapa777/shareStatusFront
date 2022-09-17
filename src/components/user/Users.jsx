@@ -5,7 +5,6 @@ import { useDispatch } from "react-redux/es/exports";
 import { followAuth } from "../../redux-store/authStore";
 
 export default function Users({users}) {
-  console.log(users)
   const dispatch=useDispatch()
   const {data}=useSelector(state=>state.auth)
   const handleFollow=(user)=>{
@@ -35,7 +34,7 @@ export default function Users({users}) {
                      <img
                        src={
                          user?.image?.url
-                           ? user.image
+                           ? user.image.url
                            : "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
                        }
                        alt=""

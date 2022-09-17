@@ -17,7 +17,6 @@ export default function Notication() {
       const socket=io(ioUrl)
       socket.emit("join-room",socketId+"_room")
       socket.on("push-notification",(message)=>{
-        console.log("push-notification : ",message)
         dispatch((setNotifications(message)))
       })
     }

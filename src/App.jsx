@@ -42,7 +42,7 @@ export default function App() {
     socketOnlineuser.on("onlineUsers",(data)=>{
       dispatch(getOnlineUser(data))
     })
-  },[data, token])
+  },[ token])
   useEffect(()=>{
     let interval_id = window.setInterval(()=>{}, 99999);
     for (let i = 0; i < interval_id; i++){
@@ -62,7 +62,6 @@ export default function App() {
             draggable: true,
             progress: undefined,
             });
-          console.log("alert")
         },Number(data?.setting?.focusInterval)*60*1000)
       }
     }
@@ -84,15 +83,15 @@ export default function App() {
         {/* <PostLoader /> */}
         <Routes>
           {/* Protected routes */}
-          {isAuth && 
+          {/* {isAuth &&  */}
             <Route >
               <Route path="/module/*" element={<Module />} />
-              <Route path="/home/*" element={<HomeRouter />} />
-              <Route path="/profile/*" element={<ProfileRouter />} />
-              <Route path="/search/*" element={<SearchRouter />} />
-              <Route path="/chat/*" element={<ChatRouter />} /> 
+              <Route path="/home/*" element={<HomeRouter isAuth={isAuth} />} />
+              <Route path="/profile/*" element={<ProfileRouter isAuth={isAuth}  />} />
+              <Route path="/search/*" element={<SearchRouter isAuth={isAuth}  />} />
+              <Route path="/chat/*" element={<ChatRouter isAuth={isAuth}  />} /> 
             </Route>
-          }
+          {/* } */}
           {/* Protected routes */}
 
           <Route path="/auth/*" element={<AuthRouter />} />

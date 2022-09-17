@@ -9,7 +9,9 @@ import { FaThumbsUp, FaShareAlt, FaComment } from "react-icons/fa"
 import { IoSendSharp } from "react-icons/io5";
 import { Link, useLocation } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { addComment, postLike, postShare } from "../../redux-store/postStore";
+import { addComment, deletePost, postLike, postShare } from "../../redux-store/postStore";
+import Confirm from "../confirm/Confirm";
+import EditPost from "./EditPost";
 
 export default function Postcard({ post }) {
   const location = useLocation();
@@ -51,6 +53,11 @@ export default function Postcard({ post }) {
     }
     dispatch(postShare(data, maal));
   };
+
+  const handleDeletePost = () =>{
+    dispatch(deletePost(post.id))
+  }
+
   return (
     <div className="PostCard bg-white rounded-sm w-[520px] rounded-md mt-3 drop-shadow-md text-sm">
       {/* top start  */}
@@ -72,7 +79,7 @@ export default function Postcard({ post }) {
           <p className="text-[10px] my-auto">
             {moment(post.createdAt).fromNow()}
           </p>
-          {location.pathname !== "/home" && (
+          {(location.pathname === "/profile") && (
             <div className="dropdown my-auto ml-3">
               <label tabIndex="0" className="text-lg">
                 <FiMoreVertical />
@@ -82,16 +89,14 @@ export default function Postcard({ post }) {
                 className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-32"
               >
                 <li>
-                  <div className="flex justify-centre items-center text-red-600">
+                  <div className="flex justify-centre items-center text-red-600" >
                     <FiDelete className="text-lg" />
-                    Delete
+                    <Confirm buttonText="delete" text="Are you sure you want to delete this status ?" actionFunc={handleDeletePost} />
                   </div>
                 </li>
                 <li>
-                  <div className="flex justify-centre items-center text-green-600">
-                    <FiEdit className="text-lg" />
-                    Edit
-                  </div>
+                  {/* edit post */}
+                  <EditPost postContent={post} />
                 </li>
               </ul>
             </div>

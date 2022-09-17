@@ -8,7 +8,7 @@ import { receiveChats, sendChats } from "../../redux-store/chatStore";
 import { ioUrl } from "../../api/url";
 import { io } from "socket.io-client";
 import {Link} from "react-router-dom"
-export default function ChatSpace({ chats, loading, friend, friendloading }) {
+export default function ChatSpace({ chats, loading, friend, friendloading, isWelcome }) {
   const chat=useSelector(s=>s.chat)
   const {onlineUsers}=useSelector(s=>s.users)
   const {data}=useSelector(s=>s.auth)
@@ -23,26 +23,24 @@ export default function ChatSpace({ chats, loading, friend, friendloading }) {
   useEffect(() => {
     if(data.id && friend.id){
       let userArr=[friend.id,data.id]
-      console.log(data)
       userArr.sort((a,b)=>a-b)
       const room=userArr.join("and")
       const socket=io(ioUrl)
       socket.emit("join-room",room)
       socket.on("receive-message",(message)=>{
-        console.log("received from the server",message)
         dispatch(receiveChats(message))
       })
-      console.log(room)
     }
 
   }, [data.id,friend.id ])
-  
 
-  console.log(location.pathname)
-  if (location.pathname !== "/chat") {
+
+  if (isWelcome) {
+    return (
     <div className="w-[80vw] h-[90vh] flex justify-center items-center">
-      <h1>Select a friend to start chatting</h1>
-    </div>;
+      <h1 className="text-xl">Select a user to start chatting.</h1>
+    </div>
+    );
   }
 
   if (loading || friendloading) {

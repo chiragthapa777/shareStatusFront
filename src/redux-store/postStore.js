@@ -20,6 +20,9 @@ export const postReducer = (state = initial, action) => {
     case "ADD_POST": {
       return { ...state, posts: [action.payload, ...state.posts] };
     }
+    case "CLEAR_POST":{
+      return { ...state, posts: [] };
+    }
     case "ADD_COMMENT": {
       return {
         ...state,
@@ -491,6 +494,14 @@ export const setEditContent=(data)=>{
     dispatch({
       type: "EDIT_POST_CONTENT",
       payload: data,
+    });
+  }
+}
+
+export const clearPost=()=>{
+  return(dispatch)=>{
+    dispatch({
+      type: "CLEAR_POST"
     });
   }
 }

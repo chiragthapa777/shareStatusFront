@@ -18,7 +18,7 @@ export default function UserLists({ userLists, loading }) {
       {userLists?.length > 0 &&
         userLists.map((user) => {
           return (
-            <Link to={`/chat/${user.id}`} key={user.id} className={`w-full flex justify-between items-center p-1 cursor-pointer mb-1 hover:bg-slate-100 rounded-md   ${user?.id && user.id === id ?"bg-slate-200":"bg-white"}`}>
+            <Link to={`/chat/${user.id}`} key={user.id} className={`w-full flex justify-between bg-slate-100 items-center p-1 cursor-pointer mb-1 hover:bg-slate-200 rounded-md   ${user?.id && user.id === id ?"bg-slate-200":"bg-white"}`}>
               <div className={`flex  `}>
                 <div className={`avatar ${onlineUsers.find(u=>u.userId===user.id)?"online":""}`}>
                   <div className="w-10 my-auto rounded-full">

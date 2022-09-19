@@ -28,6 +28,10 @@ export const userReducer = (state = initial, action) => {
        */
       return { ...state, onlineUsers: action.payload};
     }
+    case "CLEAR_USER": {
+
+      return { ...state, users:[]};
+    }
     case "SET_SUCCESS_NOTIFY":
       return { ...state, isSuccess: action.payload };
     case "SET_LOADING_NOTIFY":
@@ -142,6 +146,15 @@ export const getOnlineUser=(obj)=>{
     dispatch({
       type: "ADD_ONLINE_USER",
       payload: obj,
+    });
+  }
+}
+
+export const clearUsers=()=>{
+  //make a api
+  return(dispatch)=>{
+    dispatch({
+      type: "CLEAR_USER"
     });
   }
 }

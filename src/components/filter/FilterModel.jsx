@@ -121,7 +121,7 @@ export default function FilterModel() {
       >
         <div
           className="tooltip tooltip-bottom capitalize	"
-          data-tip="Control your post"
+          data-tip="Control your feeds"
         >
           <FiSliders />
         </div>
@@ -151,7 +151,7 @@ export default function FilterModel() {
             {/* form content */}
             <div className="w-full max-h-[100vh] pt-2">
               <h1 className="text-slate-600 font-bold	text-2xl mb-2">
-                Filter your posts
+                Filter status
               </h1>
               <div className="flex">
                 {/* left */}

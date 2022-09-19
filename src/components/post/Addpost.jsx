@@ -103,7 +103,7 @@ export default function AddPost() {
         className="btn btn-ghost btn-circle text-[1.65rem]"
         onClick={handleOpen}
       >
-        <div className="tooltip tooltip-bottom capitalize	" data-tip="add post">
+        <div className="tooltip tooltip-bottom capitalize	" data-tip="create new status">
           <FiPlusCircle />
         </div>
       </button>
@@ -132,7 +132,7 @@ export default function AddPost() {
             {/* form content */}
             <div className=" max-h-[100vh] pt-2">
               <h1 className="text-slate-600 font-bold	text-2xl mb-2">
-                Add Post
+                Add Status
               </h1>
               <div className="w-full flex ">
                 {/* left */}

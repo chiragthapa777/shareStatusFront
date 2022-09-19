@@ -48,7 +48,7 @@ export default function Notication() {
       <ul
         tabIndex="0"
         className="dropdown-content menu p-2 shadow bg-base-100 rounded-lg min-w-[400px] text-slate-800 max-h-[600px] overflow-y-auto "
-      >{notifications.length>0 && notifications.map(n=>{
+      >{notifications.length>0 ? notifications.map(n=>{
         return(
         <li key={n.id} >
           <div className={`border mb-1 ${n.seen?"hover:bg-slate-200":"bg-blue-100 hover:bg-blue-200"}`}>
@@ -56,7 +56,7 @@ export default function Notication() {
             </div>
         </li>
         )
-      })}
+      }): <h1 className="m-1">You don't have any notification</h1> }
       </ul>
     </div>
   );

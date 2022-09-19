@@ -13,6 +13,8 @@ import Notication from "../notification/Notication";
 import { useDispatch, useSelector } from "react-redux";
 import { logoutAuth } from "../../redux-store/authStore";
 import { toast } from "react-toastify";
+import { clearPost } from "../../redux-store/postStore";
+import { clearUsers } from "../../redux-store/userStore";
 
 
 export default function Header() {
@@ -25,6 +27,10 @@ export default function Header() {
   const handleLogout=()=>{
     dispatch(logoutAuth(data.name))
     navigate("/auth")
+  }
+  const handleClearUserAndPost=()=>{
+    dispatch(clearPost())
+    dispatch(clearUsers())
   }
   if(location.pathname.startsWith("/auth")){
     return <></>
@@ -50,7 +56,7 @@ export default function Header() {
         <Notication />
         <Link to="/search" className="btn btn-ghost btn-circle text-2xl ">
           <div className="tooltip tooltip-bottom capitalize	" data-tip="Search">
-            <FiSearch />
+            <FiSearch  onClick={handleClearUserAndPost}/>
           </div>
         </Link>
         <Link to="/chat" className="btn btn-ghost btn-circle text-2xl ">

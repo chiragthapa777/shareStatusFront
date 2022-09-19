@@ -50,7 +50,7 @@ export default function App() {
     }
     if(isAuth){
       dispatch(getNotifications())
-      if(data?.setting.focusMode){
+      if(data?.setting?.focusMode){
         //localstorage play
         setInterval(()=>{
           toast.warning(`You have spend ${data?.setting?.focusInterval} minutes 😢`, {
@@ -65,7 +65,7 @@ export default function App() {
         },Number(data?.setting?.focusInterval)*60*1000)
       }
     }
-  },[data.id, data.focusMode,data.focusInterval])
+  },[data.id, data?.setting?.focusMode,data?.setting?.focusInterval])
   useEffect(() => {
     dispatch(loadAuth());
   },[]);

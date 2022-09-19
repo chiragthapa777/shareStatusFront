@@ -51,9 +51,11 @@ export default function SearchPage() {
       <div>
         {
             toggle==="USER"?(
-            <Users users={users} />
+            <Users users={users} search={search} />
             ):(
-                <Posts posts={post.posts} loading={post.isLoading} />
+              post?.posts.length >0 ?
+                <Posts posts={post.posts} loading={post.isLoading} />:
+                search === ""? <h1>Start searching</h1> : <h1>{`Cannot find any status with keyword "${search}"`}</h1>
             )
         }
         

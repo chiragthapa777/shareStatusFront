@@ -4,7 +4,7 @@ import {useSelector} from "react-redux"
 import { useDispatch } from "react-redux/es/exports";
 import { followAuth } from "../../redux-store/authStore";
 
-export default function Users({users}) {
+export default function Users({users, search}) {
   const dispatch=useDispatch()
   const {data}=useSelector(state=>state.auth)
   const handleFollow=(user)=>{
@@ -21,6 +21,8 @@ export default function Users({users}) {
   }else{
     return (
       <div className="w-full p-2 bg-slate-200 rounded-md">
+        {(users?.users?.length === 0 && search==="") && "Start searching"}
+        {(users?.users?.length === 0 && search!=="") && `Cannot find any user with keyword "${search}"`}
         {users?.users?.length > 0 &&
           users.users.map((user) => {
            return (

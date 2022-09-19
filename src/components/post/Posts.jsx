@@ -13,7 +13,7 @@ export default function Posts({loading, posts}) {
     )
   }else{
   return (
-    <div className={`Post flex flex-col items-center ${posts.length<1?"w-[520px] text-lg":""}`}>
+    <div className={`Post flex flex-col items-center mb-7 ${posts.length<1?"w-[520px] text-lg":""}`}>
         {posts.length>0 &&
         posts.map(post=><Postcard key={post.id} post={post}/>)}
         {

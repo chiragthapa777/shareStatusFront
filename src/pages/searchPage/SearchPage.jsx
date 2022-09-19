@@ -55,7 +55,7 @@ export default function SearchPage() {
             ):(
               post?.posts.length >0 ?
                 <Posts posts={post.posts} loading={post.isLoading} />:
-                search === ""? <h1>Start searching</h1> : <h1>{`Cannot find any status with keyword "${search}"`}</h1>
+                search === ""? <h1 className="m-2">Start searching</h1> : <h1 className="m-2">{`Cannot find any status with keyword "${search}"`}</h1>
             )
         }
         

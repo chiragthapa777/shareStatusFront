@@ -73,13 +73,24 @@ export default function Postcard({ post }) {
               alt=""
             />
           </div>
-          <p className="my-auto  ml-3 font-semibold">{post.user.name}</p>
+          <p className="my-auto  ml-3 font-semibold">
+            {post.user.name}{" "}
+            {post?.wasSharedBy && (
+              <>
+                <br />{" "}
+                <Link
+                  to={`/profile/${post.wasSharedBy.user.id}`}
+                  className="text-slate-400 text-2xs font-extralight hover:underline"
+                >{`This status was shared by `}<span className="text-slate-500 font-normal">{`${post?.wasSharedBy?.user?.name}`}</span>{` ${moment(post.wasSharedBy.createdAt).fromNow()}`}</Link>
+              </>
+            )}
+          </p>
         </Link>
         <div className="my-auto text-sm flex">
           <p className="text-[10px] my-auto">
             {moment(post.createdAt).fromNow()}
           </p>
-          {(location.pathname === "/profile") && (
+          {location.pathname === "/profile" && (
             <div className="dropdown my-auto ml-3">
               <label tabIndex="0" className="text-lg">
                 <FiMoreVertical />
@@ -89,9 +100,13 @@ export default function Postcard({ post }) {
                 className="dropdown-content menu p-2 shadow bg-base-100 rounded-box w-32"
               >
                 <li>
-                  <div className="flex justify-centre items-center text-red-600" >
+                  <div className="flex justify-centre items-center text-red-600">
                     <FiDelete className="text-lg" />
-                    <Confirm buttonText="delete" text="Are you sure you want to delete this status ?" actionFunc={handleDeletePost} />
+                    <Confirm
+                      buttonText="delete"
+                      text="Are you sure you want to delete this status ?"
+                      actionFunc={handleDeletePost}
+                    />
                   </div>
                 </li>
                 <li>

@@ -182,7 +182,7 @@ export const loginAuth = ({ email, password }) => {
       })
       .catch((err) => {
         dispatcher(dispatch, false, "", null, null, "AUTH");
-        toast.error(`Cannot login : ${err.response.data.data}`, {
+        toast.error(`Cannot login  ${err?.response?.data?.data ? err?.response?.data?.data : "" }`, {
           position: "top-right",
           autoClose: 5000,
         });
@@ -216,7 +216,7 @@ export const registerAuth = (name, email, password) => {
       })
       .catch((err) => {
         dispatcher(dispatch, false, "", null, null, "AUTH");
-        toast.error(`${err.response.data.data}`, {
+        toast.error(`Cannot Register  ${err?.response?.data?.data ? err?.response?.data?.data : "" }`, {
           position: "top-right",
           autoClose: 5000,
         });

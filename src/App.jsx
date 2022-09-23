@@ -25,6 +25,7 @@ import { ioUrl } from "./api/url";
 import { getOnlineUser } from "./redux-store/userStore";
 
 export default function App() {
+  console.log(process.env)
   const dispatch = useDispatch();
   const socket = useRef();
   const { isLoading, data, token, isAuth } = useSelector(
@@ -37,12 +38,10 @@ export default function App() {
     }
   }
   useEffect(() => {
-    console.log("dagasdignsaoidgsdg",data.id)
     if(data?.id){
       socket.c = io(ioUrl);
       socket.c.emit("join-room", data.id + "_room");
       socket.c.on("push-notification", (message) => {
-        console.log("aaayoooooooo")
         dispatch(setNotifications(message));
       });
     }

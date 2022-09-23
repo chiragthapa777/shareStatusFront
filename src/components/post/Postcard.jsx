@@ -123,7 +123,7 @@ export default function Postcard({ post }) {
       {/* middle image start */}
       {post?.image && (
         <div className="w-full">
-          <img src={post.image.url} alt="" className="w-full object-cover" />
+          <img src={post.image.url} alt="" className="w-full object-cover max-h-96" />
         </div>
       )}
 

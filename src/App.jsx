@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from "react-redux";
 import AuthLoader from "./components/loader/AuthLoader";
 import { io } from "socket.io-client";
 import { Socket } from "./socket/socket";
-import { getNotifications } from "./redux-store/notificationStore";
+import { getNotifications, setNotifications } from "./redux-store/notificationStore";
 import { ioUrl } from "./api/url";
 import { getOnlineUser } from "./redux-store/userStore";
 
@@ -36,6 +36,17 @@ export default function App() {
       window.clearInterval(i);
     }
   }
+  useEffect(() => {
+    console.log("dagasdignsaoidgsdg",data.id)
+    if(data?.id){
+      socket.c = io(ioUrl);
+      socket.c.emit("join-room", data.id + "_room");
+      socket.c.on("push-notification", (message) => {
+        console.log("aaayoooooooo")
+        dispatch(setNotifications(message));
+      });
+    }
+  }, [token, data?.id]);
   useEffect(()=>{
     Socket(socket, data?.id,dispatch)
     const socketOnlineuser=io(ioUrl)

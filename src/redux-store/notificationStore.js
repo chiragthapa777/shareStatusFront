@@ -87,18 +87,18 @@ export const getNotifications = (id) => {
 
 export const setNotifications = (message) => {
   console.log("todo notification fixes")
- // return (dispatch) => {
-    // toast.info(`${message?.notication}`, {
-    //   position: "top-right",
-    //   autoClose: 5000,
-    // });
-    // console.log(message)
-    //todo : notification set
-    // dispatch({
-    //     type: "SET_NOTIFICATION",
-    //     payload: message,
-    //   });
-    //}
+//  return (dispatch) => {
+//     toast.info(`${message?.notication}`, {
+//       position: "top-right",
+//       autoClose: 5000,
+//     });
+//     console.log(message)
+//     // todo : notification set
+//     dispatch({
+//         type: "SET_NOTIFICATION",
+//         payload: message,
+//       });
+//     }
 }
 
 export const updateNotification = () => {

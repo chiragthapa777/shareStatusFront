@@ -42,7 +42,7 @@ export default function UserLists({ userLists, loading, search }) {
             </Link>
           );
         }):
-        <p className="m-1">{`${search ? "No users found" : "Follow or search users"}`}</p>}
+        <p className="m-1">{`${search ? "No users found" : loading ? "loading..." :"Follow or search users"}`}</p>}
     </div>
   );
 }

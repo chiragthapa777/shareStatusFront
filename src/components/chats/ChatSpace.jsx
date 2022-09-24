@@ -67,7 +67,7 @@ export default function ChatSpace({ chats, loading, friend, friendloading, isWel
           </Link>
           <div className="flex flex-col ml-2">
             <p className="text-lg">{friend.name}</p>
-            <p className="text-xs font-thin">{onlineUsers.find(u=>u.userId===friend.id)?"active":"inactive"}</p>
+            <p className="text-xs font-thin">{onlineUsers.find(u=>u.userId===friend.id)?"active":friend.email}</p>
           </div>
         </div>
       </div>

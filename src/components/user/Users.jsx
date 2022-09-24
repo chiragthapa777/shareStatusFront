@@ -22,7 +22,7 @@ export default function Users({users, search}) {
     return (
       <div className="w-full p-2 bg-slate-200 rounded-md">
         {(users?.users?.length === 0 && search==="") && "Start searching"}
-        {(users?.users?.length === 0 && search!=="") && `Cannot find any user with keyword "${search}"`}
+        {(users?.users?.length === 0 && search!=="" && search !==undefined) && `Cannot find any user with keyword "${search}"`}
         {users?.users?.length > 0 &&
           users.users.map((user) => {
            return (

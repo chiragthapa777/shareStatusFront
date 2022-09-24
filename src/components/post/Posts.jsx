@@ -20,7 +20,7 @@ export default function Posts({loading, posts}) {
           (posts.length===0 && location.pathname==='/home') &&
         <h1 className='mt-2'>
           Sorry can't find any status for your feed.
-          <br/> Inorder the see status in your feed, you must follow other users or create your own status.
+          <br/> Inorder to see status in your feed, you must follow other users or create your own status.
         </h1>
         } 
         

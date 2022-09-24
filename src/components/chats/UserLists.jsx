@@ -3,19 +3,19 @@ import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 
-export default function UserLists({ userLists, loading }) {
+export default function UserLists({ userLists, loading, search }) {
   const {id}=useParams()
   const {onlineUsers}=useSelector(s=>s.users)
   const {data}=useSelector(s=>s.auth)
-  if(loading){
+  if(loading && search && search !== ""){
     return(
-      <>loading...</>
+      <p  className="m-1">loading...</p>
     )
   }
   console.log(id)
   return (
     <div className="p-1 w-full">
-      {userLists?.length > 0 &&
+      {userLists?.length > 0 ?
         userLists.map((user) => {
           return (
             <Link to={`/chat/${user.id}`} key={user.id} className={`w-full flex justify-between bg-slate-100 items-center p-1 cursor-pointer mb-1 hover:bg-slate-200 rounded-md   ${user?.id && user.id === id ?"bg-slate-200":"bg-white"}`}>
@@ -41,7 +41,8 @@ export default function UserLists({ userLists, loading }) {
               </div>
             </Link>
           );
-        })}
+        }):
+        <p className="m-1">{`${search ? "No users found" : "Follow or search users"}`}</p>}
     </div>
   );
 }

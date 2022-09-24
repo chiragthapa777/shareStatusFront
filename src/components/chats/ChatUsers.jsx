@@ -24,7 +24,7 @@ export default function ChatUsers({userLists, loading, search, setsearch, handle
           </div>
         </div>
       </div>
-      <UserLists userLists={userLists} loading={loading} id={id} />
+      <UserLists userLists={userLists} loading={loading} id={id} search={search} />
     </div>
   );
 }
